@@ -18,6 +18,7 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -59,15 +60,8 @@ public class AddToCartTest {
         mainPage.searchProduct(searchQuery);
 
         //check if there is similar product in cart already
-        if (cartItems == null || cartItems.isEmpty()) {
-            System.out.println("Корзина пуста");
-        }
 
-        for (String element : cartItems) {
-            if (element.toLowerCase().contains(searchQuery.toLowerCase())) {
-                System.out.println("Це вже є в корзині");
-            }
-        }
+        Assert.assertTrue(cartItems.get(0).contains(searchQuery), "Ім'я товару зі сторінки не знайдено в корзині!");
 
 
         //Loading
@@ -81,18 +75,13 @@ public class AddToCartTest {
         //adding product to the state of cart
         this.cartItems.add(productPage.getCurrentTitle());
 
-        //again checking
-        if (cartItems == null || cartItems.isEmpty()) {
-            System.out.println("Корзина пуста");
-        }
 
-        for (String element : cartItems) {
-            if (element.toLowerCase().contains(productPage.getCurrentTitle().toLowerCase())) {
-                System.out.println("Це вже є в корзині");
-            }
-        }
         //click on btn
         productPage.addToCart();
+
+        //again checking
+        Assert.assertTrue(cartItems.get(0).contains(productPage.getCurrentTitle()), "Ім'я товару зі сторінки не знайдено в корзині!");
+
 
         //waiting till
         checkoutPage.waitForPageLoaded();
@@ -108,9 +97,8 @@ public class AddToCartTest {
         this.cartItems.remove(0);
 
         //checking if the cart is empty
-        if (cartItems == null || cartItems.isEmpty()) {
-            System.out.println("Корзина пуста");
-        }
+        Assert.assertTrue(!cartItems.isEmpty(), "Корзина пуста");
+
     }
     //the end
     @AfterMethod
