@@ -8,6 +8,7 @@ package org.example;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.example.pages.CartPage;
+import org.example.pages.Checkout;
 import org.example.pages.MainPage;
 import org.example.pages.ProductPage;
 import org.openqa.selenium.By;
@@ -29,6 +30,7 @@ public class AddToCartTest {
     private MainPage mainPage;
     private ProductPage productPage;
     private CartPage cartPage;
+    private Checkout checkoutPage;
     private String searchQuery = "iPhone 16";
 
     // настройка перед тестом
@@ -43,6 +45,7 @@ public class AddToCartTest {
         mainPage = new MainPage(driver);
         productPage = new ProductPage(driver);
         cartPage = new CartPage(driver);
+        checkoutPage = new Checkout(driver);
     }
 
     //початок тесту
@@ -57,18 +60,13 @@ public class AddToCartTest {
         cartPage.isProductInCart(searchQuery);
 
         //Loading
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-        WebElement element = wait.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector("section.content_type_catalog")));
-
+        mainPage.waitProductListLoaded();
         //clicking on the first product
-        mainPage.getFirstProduct().click();
 
-        //Loading
-        try {
-            Thread.sleep(3000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+
+        mainPage.clickFirstProduct();
+
+
         //adding product to the state of cart
         cartPage.addProduct(productPage.getCurrentTitle());
         //again checking
@@ -76,29 +74,15 @@ public class AddToCartTest {
         //click on btn
         productPage.addToCart();
 
+        //waiting till
+        checkoutPage.waitForPageLoaded();
 
-        //loading
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
         //going back to main page
         mainPage.open();
-        //loading
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+
         //opening cart modal
         mainPage.openCart();
-        //loading
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+
 
         cartPage.removeProduct();
 

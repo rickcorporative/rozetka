@@ -9,6 +9,10 @@ package org.example.pages;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
+import java.time.Duration;
 
 public class ProductPage {
     private WebDriver driver;
@@ -22,20 +26,16 @@ public class ProductPage {
 
 
     public void addToCart(){
-        driver.findElement(buyBtn).click();
-        try {
-            Thread.sleep(3000); // Пауза 3 секунды, чтобы страница прогрузилась
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        WebElement clickableBuyButton = wait.until(ExpectedConditions.elementToBeClickable(driver.findElement(buyBtn)));
 
-        driver.findElement(addToCartBtn).click();
+        clickableBuyButton.click();
 
-        try {
-            Thread.sleep(3000); // Пауза 3 секунды, чтобы страница прогрузилась
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        WebDriverWait waitfor = new WebDriverWait(driver, Duration.ofSeconds(10));
+        WebElement order = waitfor.until(ExpectedConditions.elementToBeClickable(driver.findElement(addToCartBtn)));
+
+        order.click();
+
     }
 
     public String getCurrentTitle(){

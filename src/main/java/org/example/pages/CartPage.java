@@ -8,7 +8,11 @@ package org.example.pages;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,14 +32,15 @@ public class CartPage {
     }
 
     public void removeProduct(){
-        driver.findElement(bullets).click();
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        WebElement bulletBtn = wait.until(ExpectedConditions.elementToBeClickable(driver.findElement(bullets)));
+
+        bulletBtn.click();
         cartItems.remove(0);
-        try {
-            Thread.sleep(1000); // Пауза 3 секунды, чтобы страница прогрузилась
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        driver.findElement(deleteBtn).click();
+
+        WebDriverWait waitForDelete = new WebDriverWait(driver, Duration.ofSeconds(10));
+        WebElement deleteButton = wait.until(ExpectedConditions.elementToBeClickable(driver.findElement(deleteBtn)));
+        deleteButton.click();
     }
 
     public boolean isProductInCart(String product) {
