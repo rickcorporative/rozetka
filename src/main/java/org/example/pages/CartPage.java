@@ -27,16 +27,13 @@ public class CartPage {
         cartItems = new ArrayList<>();
     }
 
-    public void addProduct(String product){
-        cartItems.add(product);
-    }
+
 
     public void removeProduct(){
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
         WebElement bulletBtn = wait.until(ExpectedConditions.elementToBeClickable(driver.findElement(bullets)));
 
         bulletBtn.click();
-        cartItems.remove(0);
 
         WebDriverWait waitForDelete = new WebDriverWait(driver, Duration.ofSeconds(10));
         WebElement deleteButton = wait.until(ExpectedConditions.elementToBeClickable(driver.findElement(deleteBtn)));
@@ -64,5 +61,9 @@ public class CartPage {
         }
         System.out.println("Корзина пуста");
         return true;
+    }
+
+    public List getCartItems(){
+        return cartItems;
     }
 }

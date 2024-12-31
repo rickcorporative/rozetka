@@ -23,6 +23,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.time.Duration;
+import java.util.List;
 
 public class AddToCartTest {
     //поля
@@ -32,6 +33,7 @@ public class AddToCartTest {
     private CartPage cartPage;
     private Checkout checkoutPage;
     private String searchQuery = "iPhone 16";
+    private List<String> cartItems;
 
     // настройка перед тестом
     @BeforeMethod
@@ -57,7 +59,16 @@ public class AddToCartTest {
         mainPage.searchProduct(searchQuery);
 
         //check if there is similar product in cart already
-        cartPage.isProductInCart(searchQuery);
+        if (cartItems == null || cartItems.isEmpty()) {
+            System.out.println("Корзина пуста");
+        }
+
+        for (String element : cartItems) {
+            if (element.toLowerCase().contains(searchQuery.toLowerCase())) {
+                System.out.println("Це вже є в корзині");
+            }
+        }
+
 
         //Loading
         mainPage.waitProductListLoaded();
@@ -68,9 +79,18 @@ public class AddToCartTest {
 
 
         //adding product to the state of cart
-        cartPage.addProduct(productPage.getCurrentTitle());
+        this.cartItems.add(productPage.getCurrentTitle());
+
         //again checking
-        cartPage.isProductInCart(productPage.getCurrentTitle());
+        if (cartItems == null || cartItems.isEmpty()) {
+            System.out.println("Корзина пуста");
+        }
+
+        for (String element : cartItems) {
+            if (element.toLowerCase().contains(productPage.getCurrentTitle().toLowerCase())) {
+                System.out.println("Це вже є в корзині");
+            }
+        }
         //click on btn
         productPage.addToCart();
 
@@ -85,8 +105,12 @@ public class AddToCartTest {
 
 
         cartPage.removeProduct();
+        this.cartItems.remove(0);
 
-        cartPage.isCartEmpty();
+        //checking if the cart is empty
+        if (cartItems == null || cartItems.isEmpty()) {
+            System.out.println("Корзина пуста");
+        }
     }
     //the end
     @AfterMethod
